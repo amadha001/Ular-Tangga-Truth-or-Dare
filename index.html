@@ -557,29 +557,58 @@ async function joinRoom() {
   button.disabled = true;
 
   try {
-    await ensureUser();
-    const ref = doc(db,"rooms",code);
+    
+await ensureUser();
 
-    await runTransaction(db,async tx => {
-      const snap = await tx.get(ref);
-      if (!snap.exists()) throw new Error("Room tidak ditemukan. Cek kodenya.");
+console.log("UID pemain:", currentUser.uid);
+console.log("Project:", firebaseConfig.projectId);
+console.log("Kode room:", code);
 
-      const data = snap.data();
-      if (data.status !== "lobby") throw new Error("Permainan sudah dimulai.");
-      if (data.playerUids.includes(currentUser.uid)) return;
-      if (data.players.length >= 6) throw new Error("Room sudah penuh, maksimal 6 pemain.");
+const ref = doc(db, "rooms", code);
 
-      const player = {
-        uid:currentUser.uid,
-        name,
-        color:COLORS[data.players.length%COLORS.length],
-        position:1
-      };
+await runTransaction(db, async tx => {
+  console.log("Membaca room...");
 
-      tx.update(ref,{
-        players:[...data.players,player],
-        playerUids:[...data.playerUids,currentUser.uid]
-      });
+  const snap = await tx.get(ref);
+
+  if (!snap.exists()) {
+    throw new Error("Room tidak ditemukan. Cek kodenya.");
+  }
+
+  const data = snap.data();
+
+  console.log("Status room:", data.status);
+  console.log("UID pemain di room:", data.playerUids);
+  console.log("Jumlah pemain:", data.players.length);
+
+  if (data.status !== "lobby") {
+    throw new Error("Permainan sudah dimulai.");
+  }
+
+  if (data.playerUids.includes(currentUser.uid)) {
+    console.log("Pemain sudah terdaftar.");
+    return;
+  }
+
+  if (data.players.length >= 6) {
+    throw new Error("Room sudah penuh, maksimal 6 pemain.");
+  }
+
+  const player = {
+    uid: currentUser.uid,
+    name,
+    color: COLORS[data.players.length % COLORS.length],
+    position: 1
+  };
+
+  console.log("Memperbarui daftar pemain...");
+
+  tx.update(ref, {
+    players: [...data.players, player],
+    playerUids: [...data.playerUids, currentUser.uid]
+  });
+});
+
     });
 
     enterRoom(code);
