@@ -1,256 +1,254 @@
+
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff5fa">
-  <title>Teman Tangga — Ular Tangga Online</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #49384e;
-      --muted: #8e7b94;
-      --pink: #f6a9c9;
-      --pink-deep: #e87fac;
-      --lilac: #c9b7f7;
-      --mint: #b9ead9;
-      --yellow: #ffe6a6;
-      --paper: #fffafd;
-      --line: #f0dfeb;
-      --shadow: 0 14px 40px rgba(112, 71, 112, .10);
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Nunito, system-ui, sans-serif; color: var(--ink); background: #fff5fa; }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    .app { min-height: 100vh; padding: 22px; background: radial-gradient(circle at 5% 0%, #ffe4f0 0, transparent 27%), radial-gradient(circle at 95% 10%, #e9e1ff 0, transparent 25%), #fff8fc; }
-    .shell { max-width: 1240px; margin: auto; }
-    header { display:flex; justify-content:space-between; align-items:center; gap:16px; margin: 0 auto 22px; }
-    .brand { display:flex; align-items:center; gap:12px; font-weight:900; font-size:1.3rem; letter-spacing:-.04em; }
-    .logo { display:grid; place-items:center; width:46px; height:46px; border-radius:16px; background:linear-gradient(135deg,#f8b7d2,#d8c8ff); box-shadow:0 6px 14px #e8c8df; font-size:24px; }
-    .online-pill { display:flex; align-items:center; gap:8px; border:1px solid #d9efe5; background:#f0fff8; color:#42876e; padding:8px 12px; border-radius:999px; font-size:.82rem; font-weight:800; }
-    .dot { width:8px;height:8px;background:#58bd91;border-radius:50%; }
-    .hero { text-align:center; padding:20px 12px 26px; }
-    .eyebrow { display:inline-block; padding:6px 12px; border-radius:999px; background:#f6eaff; color:#9274be; font-size:.78rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
-    h1 { font-size:clamp(2rem,5vw,3.6rem); line-height:1.04; letter-spacing:-.055em; margin:15px 0 12px; }
-    h1 span { color:#e77fae; }
-    .hero p { color:var(--muted); max-width:600px; margin:0 auto; line-height:1.65; }
-    .lobby { display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:820px; margin:0 auto; }
-    .panel { background:rgba(255,255,255,.88); border:1px solid var(--line); border-radius:24px; padding:24px; box-shadow:var(--shadow); }
-    .panel h2 { margin:0 0 6px; font-size:1.2rem; letter-spacing:-.03em; }
-    .panel p { margin:0 0 18px; color:var(--muted); font-size:.92rem; line-height:1.5; }
-    label { display:block; margin:12px 0 7px; font-size:.82rem; font-weight:900; color:#77637d; }
-    input { width:100%; border:1.5px solid #ead9e8; border-radius:13px; background:#fffaff; padding:13px 14px; color:var(--ink); outline:none; }
-    input:focus { border-color:#d8a2d0; box-shadow:0 0 0 3px #f7e5f4; }
-    .btn { border:0; border-radius:14px; padding:13px 17px; font-weight:900; transition:transform .15s,filter .15s; }
-    .btn:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.02); }
-    .btn-primary { color:#fff; background:linear-gradient(135deg,#e987b2,#bf9beb); box-shadow:0 8px 16px #eccfe4; }
-    .btn-soft { color:#7e5b88; background:#f7eafb; border:1px solid #eddcf2; }
-    .btn-block { width:100%; margin-top:15px; }
-    .notice { min-height:22px; margin:12px 0 0; font-size:.87rem; color:#a34b75; font-weight:800; }
-    .rules { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:20px auto 0; max-width:820px; }
-    .rule-chip { padding:8px 11px; border:1px solid #f0dfeb; background:#fff; border-radius:999px; font-size:.78rem; color:#8c7792; font-weight:800; }
-    .game-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr); gap:18px; align-items:start; }
-    .board-panel { padding:15px; }
-    .game-topline { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:0 0 14px; }
-    .room-code { font-size:.78rem; color:var(--muted); font-weight:800; }
-    .room-code strong { color:#a45c94; letter-spacing:.12em; font-size:1rem; margin-left:5px; }
-    .board { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:4px; padding:7px; border-radius:18px; background:#f6eaf5; border:1px solid #ead9e8; }
-    .cell { position:relative; aspect-ratio:1/1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; border-radius:7px; border:1px solid rgba(130,95,135,.10); overflow:hidden; }
-    .cell:nth-child(4n+1) { background:#fff4fa; }
-    .cell:nth-child(4n+2) { background:#f0eaff; }
-    .cell:nth-child(4n+3) { background:#eafff6; }
-    .cell:nth-child(4n) { background:#fff5d9; }
-    .cell.special { outline:2px solid rgba(219,136,182,.75); outline-offset:-2px; }
-    .cell-num { font-size:clamp(.55rem,1.1vw,.82rem); font-weight:900; color:#826b8a; }
-    .cell-symbol { font-size:clamp(.6rem,1.25vw,1rem); line-height:1; }
-    .tokens { display:flex; flex-wrap:wrap; justify-content:center; gap:1px; max-width:100%; }
-    .token { display:inline-grid; place-items:center; width:clamp(11px,1.6vw,18px); height:clamp(11px,1.6vw,18px); border-radius:50%; color:white; font-size:clamp(7px,.8vw,10px); font-weight:900; border:1px solid #fff; box-shadow:0 1px 3px #9c829a; }
-    .token.mini { width:12px;height:12px;font-size:7px; }
-    .board-legend { display:flex; flex-wrap:wrap; gap:12px; margin:12px 4px 2px; font-size:.78rem; color:var(--muted); font-weight:800; }
-    .game-side { display:grid; gap:14px; }
-    .side-panel { padding:19px; }
-    .side-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:13px; }
-    .side-heading h2 { margin:0; font-size:1.08rem; }
-    .count { font-size:.74rem; background:#f8eafa; padding:5px 8px; border-radius:999px; color:#9b70a3; font-weight:900; }
-    .player-list { display:grid; gap:9px; }
-    .player-row { display:flex; align-items:center; gap:10px; padding:10px; border-radius:14px; background:#fff8fd; border:1px solid #f3e7f1; }
-    .player-row.active { border-color:#e8a5ca; background:#fff0f7; box-shadow:0 0 0 2px #fce1ef; }
-    .avatar { display:grid; place-items:center; width:35px;height:35px;border-radius:12px;color:white;font-weight:900; flex-shrink:0; }
-    .player-info { min-width:0; flex:1; }
-    .player-name { font-size:.88rem; font-weight:900; overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
-    .player-pos { font-size:.74rem; color:var(--muted); }
-    .turn-tag { font-size:.66rem; color:#b65d8d; font-weight:900; }
-    .turn-card { text-align:center; background:linear-gradient(145deg,#fff0f7,#f5efff); border:1px solid #efdaed; border-radius:18px; padding:17px; }
-    .dice { display:grid; place-items:center; width:68px;height:68px; margin:0 auto 10px; border-radius:19px; background:#fff; box-shadow:0 7px 15px #e5cfe5; font-size:2.8rem; }
-    .turn-name { font-size:1.1rem; font-weight:900; }
-    .turn-help { font-size:.8rem; color:var(--muted); margin:5px 0 14px; line-height:1.4; }
-    .turn-card .btn { width:100%; }
-    .turn-card .btn + .btn { margin-top:8px; }
-    .status { color:var(--muted); font-size:.8rem; line-height:1.45; margin-top:10px; min-height:18px; }
-    .log { display:grid; gap:8px; max-height:150px; overflow:auto; }
-    .log-item { font-size:.78rem; line-height:1.4; color:#806c87; padding:8px 10px; border-radius:10px; background:#fff9fd; }
-    .modal-backdrop { position:fixed; inset:0; display:none; place-items:center; padding:18px; background:rgba(67,43,75,.35); backdrop-filter:blur(5px); z-index:10; }
-    .modal-backdrop.show { display:grid; }
-    .question-card { width:min(440px,100%); position:relative; overflow:hidden; border-radius:28px; padding:27px; background:linear-gradient(150deg,#fffafd,#fff0f7); box-shadow:0 25px 90px rgba(69,42,80,.25); border:1px solid #fff; text-align:center; }
-    .card-sparkle { font-size:2.1rem; margin-bottom:7px; }
-    .card-type { display:inline-block; border-radius:999px; padding:7px 12px; background:#f1e5ff; color:#8664b4; font-size:.74rem; font-weight:900; letter-spacing:.1em; }
-    .question-card h2 { font-size:1.55rem; line-height:1.3; letter-spacing:-.03em; margin:17px 0 10px; }
-    .question-card p { color:var(--muted); font-size:.9rem; line-height:1.55; }
-    .question-card .btn { width:100%; margin-top:12px; }
-    .question-card .btn-soft { margin-top:8px; }
-    .close-x { position:absolute; top:13px; right:14px; border:0; background:#f8e8f2; border-radius:50%; width:32px;height:32px; color:#926b8b; font-weight:900; }
-    .hidden { display:none !important; }
-    .footer { text-align:center; color:#b29eb6; font-size:.76rem; padding:24px 0 4px; }
-    @media (max-width:850px) { .game-layout { grid-template-columns:1fr; } .game-side { grid-template-columns:1fr 1fr; } .game-side .players-panel { grid-row:span 2; } }
-    @media (max-width:600px) { .app { padding:12px; } header { margin-bottom:8px; } .brand {font-size:1.08rem;} .logo {width:40px;height:40px;} .hero {padding:17px 4px 20px;} .lobby {grid-template-columns:1fr;} .panel {padding:19px;} .board-panel {padding:8px;} .board {gap:2px;padding:4px;} .cell {border-radius:4px;} .cell-num {font-size:clamp(.48rem,2.2vw,.72rem);} .cell-symbol {font-size:clamp(.55rem,2.5vw,.9rem);} .token {width:clamp(9px,2.4vw,15px);height:clamp(9px,2.4vw,15px);} .game-side {grid-template-columns:1fr;} .game-side .players-panel {grid-row:auto;} .online-pill {font-size:.7rem;padding:7px 9px;} .question-card {padding:24px 21px;} }
- /* Ular dan tangga yang membentang di atas papan */
-#board {
-position: relative;
-isolation: isolate;
-}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff5fa">
+<title>Teman Tangga — Ular Tangga Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-.snake-overlay {
-position: absolute;
-inset: 0;
-width: 100%;
-height: 100%;
-z-index: 2;
-pointer-events: none;
-overflow: visible;
+<style>
+:root {
+  --ink:#49384e; --muted:#8e7b94; --pink:#e987b2;
+  --purple:#bf9beb; --line:#f0dfeb; --shadow:0 14px 40px #7047701a;
 }
-
-.snake-overlay path {
-fill: none;
-stroke: #e85d75;
-stroke-width: 5;
-stroke-linecap: round;
-stroke-linejoin: round;
-filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
+* { box-sizing:border-box; }
+body { margin:0; font-family:Nunito,system-ui,sans-serif; color:var(--ink); background:#fff5fa; }
+button,input { font:inherit; }
+button { cursor:pointer; }
+button:disabled { opacity:.45; cursor:not-allowed; }
+.hidden { display:none!important; }
+.app {
+  min-height:100vh; padding:20px;
+  background:radial-gradient(circle at 5% 0%,#ffe4f0,transparent 27%),
+             radial-gradient(circle at 95% 10%,#e9e1ff,transparent 25%),#fff8fc;
 }
-
-.snake-overlay circle {
-fill: #e85d75;
-stroke: #fff;
-stroke-width: 1.5;
+.shell { max-width:1240px; margin:auto; }
+header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:20px; }
+.brand { display:flex; align-items:center; gap:12px; font-size:1.3rem; font-weight:900; }
+.logo {
+  display:grid; place-items:center; width:46px; height:46px;
+  border-radius:16px; background:linear-gradient(135deg,#f8b7d2,#d8c8ff);
+  box-shadow:0 6px 14px #e8c8df; font-size:24px;
 }
-
-.snake-overlay .snake-eye {
-fill: #fff;
-stroke: none;
+.online-pill { display:flex; align-items:center; gap:8px; border:1px solid #d9efe5; background:#f0fff8; color:#42876e; padding:8px 12px; border-radius:999px; font-size:.8rem; font-weight:800; }
+.dot { width:8px; height:8px; background:#58bd91; border-radius:50%; }
+.hero { text-align:center; padding:20px 12px 26px; }
+.eyebrow { display:inline-block; padding:6px 12px; border-radius:999px; background:#f6eaff; color:#9274be; font-size:.78rem; font-weight:900; letter-spacing:.08em; }
+h1 { font-size:clamp(2rem,5vw,3.6rem); line-height:1.04; letter-spacing:-.055em; margin:15px 0 12px; }
+h1 span { color:#e77fae; }
+.hero p { color:var(--muted); max-width:600px; margin:auto; line-height:1.65; }
+.lobby { display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:820px; margin:auto; }
+.panel { background:#ffffffeb; border:1px solid var(--line); border-radius:24px; padding:22px; box-shadow:var(--shadow); }
+.panel h2 { margin:0 0 6px; font-size:1.2rem; }
+.panel p { margin:0 0 18px; color:var(--muted); font-size:.92rem; line-height:1.5; }
+label { display:block; margin:12px 0 7px; font-size:.82rem; font-weight:900; color:#77637d; }
+input { width:100%; border:1.5px solid #ead9e8; border-radius:13px; background:#fffaff; padding:13px 14px; color:var(--ink); outline:none; }
+input:focus { border-color:#d8a2d0; box-shadow:0 0 0 3px #f7e5f4; }
+.btn { border:0; border-radius:14px; padding:12px 16px; font-weight:900; transition:transform .15s; }
+.btn:hover:not(:disabled) { transform:translateY(-1px); }
+.btn-primary { color:white; background:linear-gradient(135deg,#e987b2,#bf9beb); box-shadow:0 8px 16px #eccfe4; }
+.btn-soft { color:#7e5b88; background:#f7eafb; border:1px solid #eddcf2; }
+.btn-block { width:100%; margin-top:15px; }
+.notice { min-height:22px; margin:12px 0 0; font-size:.87rem; color:#a34b75; font-weight:800; }
+.rules { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:20px auto 0; }
+.rule-chip { padding:8px 11px; border:1px solid var(--line); background:white; border-radius:999px; font-size:.78rem; color:#8c7792; font-weight:800; }
+.game-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(270px,.85fr); gap:18px; align-items:start; }
+.board-panel { padding:14px; }
+.game-topline,.side-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:13px; }
+.room-code { font-size:.78rem; color:var(--muted); font-weight:800; }
+.room-code strong { color:#a45c94; letter-spacing:.12em; font-size:1rem; margin-left:5px; }
+.status { color:var(--muted); font-size:.8rem; line-height:1.5; margin-top:8px; min-height:18px; }
+.board {
+  position:relative; isolation:isolate; display:grid;
+  grid-template-columns:repeat(10,minmax(0,1fr)); gap:3px;
+  padding:6px; border-radius:18px; background:#f6eaf5; border:1px solid #ead9e8;
 }
-
-.snake-overlay .snake-pupil {
-fill: #542638;
-stroke: none;
+.cell {
+  position:relative; aspect-ratio:1; min-width:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+  border-radius:6px; border:1px solid #82608718; overflow:hidden;
 }
-  </style>
+.cell:nth-child(4n+1) { background:#fff4fa; }
+.cell:nth-child(4n+2) { background:#f0eaff; }
+.cell:nth-child(4n+3) { background:#eafff6; }
+.cell:nth-child(4n) { background:#fff5d9; }
+.cell.special { outline:2px solid #db88b6bf; outline-offset:-2px; }
+.cell-num { font-size:clamp(.5rem,1.1vw,.82rem); font-weight:900; color:#826b8a; }
+.cell-symbol { font-size:clamp(.55rem,1.25vw,1rem); line-height:1; }
+.tokens { display:flex; flex-wrap:wrap; justify-content:center; gap:1px; max-width:100%; position:relative; z-index:3; }
+.token {
+  display:inline-grid; place-items:center; width:clamp(10px,1.6vw,18px);
+  height:clamp(10px,1.6vw,18px); border-radius:50%; color:white;
+  font-size:clamp(7px,.8vw,10px); font-weight:900; border:1px solid white;
+  box-shadow:0 1px 3px #9c829a;
+}
+.snake-overlay { position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; overflow:visible; }
+.snake-overlay path { fill:none; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 1px 1px #0003); }
+.board-legend { display:flex; flex-wrap:wrap; gap:12px; margin:12px 4px 2px; font-size:.78rem; color:var(--muted); font-weight:800; }
+.game-side { display:grid; gap:14px; }
+.side-panel { padding:18px; }
+.side-heading h2 { margin:0; font-size:1.05rem; }
+.count { font-size:.74rem; background:#f8eafa; padding:5px 8px; border-radius:999px; color:#9b70a3; font-weight:900; }
+.player-list { display:grid; gap:9px; }
+.player-row { display:flex; align-items:center; gap:10px; padding:10px; border-radius:14px; background:#fff8fd; border:1px solid #f3e7f1; }
+.player-row.active { border-color:#e8a5ca; background:#fff0f7; box-shadow:0 0 0 2px #fce1ef; }
+.avatar { display:grid; place-items:center; width:35px; height:35px; border-radius:12px; color:white; font-weight:900; flex-shrink:0; }
+.player-info { min-width:0; flex:1; }
+.player-name { font-size:.86rem; font-weight:900; overflow-wrap:anywhere; }
+.player-pos { font-size:.74rem; color:var(--muted); }
+.turn-tag { font-size:.66rem; color:#b65d8d; font-weight:900; }
+.turn-card { text-align:center; background:linear-gradient(145deg,#fff0f7,#f5efff); border:1px solid #efdaed; border-radius:18px; padding:16px; }
+.dice { display:grid; place-items:center; width:68px; height:68px; margin:0 auto 10px; border-radius:19px; background:white; box-shadow:0 7px 15px #e5cfe5; font-size:2.8rem; }
+.turn-name { font-size:1.1rem; font-weight:900; }
+.turn-help { font-size:.8rem; color:var(--muted); margin:5px 0 14px; line-height:1.5; }
+.turn-card .btn { width:100%; }
+.turn-card .btn+.btn { margin-top:8px; }
+.log { display:grid; gap:8px; max-height:160px; overflow:auto; }
+.log-item { font-size:.78rem; line-height:1.5; color:#806c87; padding:8px 10px; border-radius:10px; background:#fff9fd; }
+.modal-backdrop { position:fixed; inset:0; display:none; place-items:center; padding:18px; background:#432b754d; backdrop-filter:blur(5px); z-index:10; }
+.modal-backdrop.show { display:grid; }
+.question-card { width:min(440px,100%); position:relative; border-radius:28px; padding:27px; background:linear-gradient(150deg,#fffafd,#fff0f7); box-shadow:0 25px 90px #452a8040; border:1px solid white; text-align:center; }
+.card-sparkle { font-size:2.1rem; margin-bottom:7px; }
+.card-type { display:inline-block; border-radius:999px; padding:7px 12px; background:#f1e5ff; color:#8664b4; font-size:.74rem; font-weight:900; letter-spacing:.1em; }
+.question-card h2 { font-size:1.5rem; line-height:1.35; margin:17px 0 10px; }
+.question-card p { color:var(--muted); font-size:.9rem; line-height:1.55; }
+.question-card .btn { width:100%; margin-top:12px; }
+.close-x { position:absolute; top:13px; right:14px; border:0; background:#f8e8f2; border-radius:50%; width:32px; height:32px; color:#926b8b; font-weight:900; }
+.footer { text-align:center; color:#b29eb6; font-size:.76rem; padding:24px 0 4px; }
+@media(max-width:850px) {
+  .game-layout { grid-template-columns:1fr; }
+  .game-side { grid-template-columns:1fr 1fr; }
+  .players-panel { grid-row:span 2; }
+}
+@media(max-width:600px) {
+  .app { padding:10px; }
+  .brand { font-size:1.05rem; gap:8px; }
+  .logo { width:40px; height:40px; }
+  .online-pill { font-size:.68rem; padding:7px 8px; }
+  .hero { padding:17px 4px 20px; }
+  .lobby,.game-side { grid-template-columns:1fr; }
+  .panel { padding:16px; }
+  .board-panel { padding:7px; }
+  .board { gap:2px; padding:4px; }
+  .cell { border-radius:3px; }
+  .cell-num { font-size:clamp(.45rem,2vw,.7rem); }
+  .cell-symbol { font-size:clamp(.5rem,2.4vw,.85rem); }
+  .players-panel { grid-row:auto; }
+  .token { width:clamp(9px,2.4vw,15px); height:clamp(9px,2.4vw,15px); }
+  .question-card { padding:24px 20px; }
+}
+</style>
 </head>
+
 <body>
-  <main class="app">
-    <div class="shell">
-      <header>
-        <div class="brand"><div class="logo">🎲</div><span>Teman Tangga</span></div>
-        <div class="online-pill"><span class="dot"></span> Multiplayer online</div>
-      </header>
-      <section id="lobbyView">
-        <div class="hero">
-          <span class="eyebrow">Roll • Climb • Share</span>
-          <h1>Naik tangga, turun ular,<br><span>buka cerita!</span></h1>
-          <p>Main ular tangga bareng teman dan temukan pertanyaan Truth or Dare di sepanjang perjalanan. Tidak ada jawaban benar atau salah—yang penting seru.</p>
-        </div>
-        <div class="lobby">
-          <section class="panel">
-            <h2>🌷 Buat room baru</h2>
-            <p>Jadilah host, lalu bagikan kode room ke temanmu.</p>
-            <label for="createName">Nama pemain</label>
-            <input id="createName" maxlength="18" placeholder="Contoh: Amadha" autocomplete="nickname">
-            <button class="btn btn-primary btn-block" id="createBtn">Buat room ✨</button>
-          </section>
-          <section class="panel">
-            <h2>💌 Gabung room</h2>
-            <p>Masukkan kode yang diberikan oleh host.</p>
-            <label for="joinName">Nama pemain</label>
-            <input id="joinName" maxlength="18" placeholder="Nama kamu" autocomplete="nickname">
-            <label for="roomCodeInput">Kode room</label>
-            <input id="roomCodeInput" maxlength="6" placeholder="Contoh: PINK42" style="text-transform:uppercase;letter-spacing:.12em">
-            <button class="btn btn-soft btn-block" id="joinBtn">Gabung permainan</button>
-          </section>
-        </div>
-        <div id="lobbyNotice" class="notice" style="text-align:center"></div>
-        <div class="rules">
-          <span class="rule-chip">👥 2–6 pemain</span>
-          <span class="rule-chip">💗 Truth & Dare acak</span>
-          <span class="rule-chip">🐍 100 kotak</span>
-          <span class="rule-chip">📱 Ramah HP</span>
-        </div>
-      </section>
+<main class="app">
+<div class="shell">
+<header>
+  <div class="brand"><div class="logo">🎲</div><span>Teman Tangga</span></div>
+  <div class="online-pill"><span class="dot"></span> Multiplayer online</div>
+</header>
 
-      <section id="gameView" class="hidden">
-        <div class="game-layout">
-          <section class="panel board-panel">
-            <div class="game-topline">
-              <div><div class="room-code">KODE ROOM <strong id="roomCodeDisplay">------</strong></div><div class="status" id="gameStatus" style="margin-top:3px">Menunggu pemain...</div></div>
-              <button class="btn btn-soft" id="copyCodeBtn">Salin kode</button>
-            </div>
-            <div id="board" class="board" aria-label="Papan ular tangga"></div>
-            <div class="board-legend"><span>🪜 Tangga: naik</span><span>🐍 Ular: turun</span><span>🃏 Setiap berhenti = kartu</span></div>
-          </section>
-          <aside class="game-side">
-            <section class="panel side-panel players-panel">
-              <div class="side-heading"><h2>Teman bermain</h2><span class="count" id="playerCount">0/6</span></div>
-              <div class="player-list" id="playerList"></div>
-              <button class="btn btn-primary btn-block hidden" id="startBtn">Mulai permainan 🎉</button>
-              <button class="btn btn-soft btn-block hidden" id="leaveBtn">Keluar ke beranda</button>
-              <div class="status" id="playerStatus"></div>
-            </section>
-            <section class="panel side-panel">
-              <div class="side-heading"><h2>Giliran kamu</h2><span class="count" id="turnCount">Siap?</span></div>
-              <div class="turn-card">
-                <div class="dice" id="diceFace">🎲</div>
-                <div class="turn-name" id="turnName">Menunggu...</div>
-                <div class="turn-help" id="turnHelp">Host bisa memulai saat teman sudah bergabung.</div>
-                <button class="btn btn-primary" id="rollBtn" disabled>Lempar dadu</button>
-                <button class="btn btn-soft hidden" id="continueBtn">Lanjutkan giliran</button>
-                <div class="status" id="turnStatus"></div>
-              </div>
-            </section>
-            <section class="panel side-panel">
-              <div class="side-heading"><h2>Jejak permainan</h2><span class="count">LIVE</span></div>
-              <div class="log" id="gameLog"><div class="log-item">Belum ada langkah. Siapa yang akan mulai? 🌸</div></div>
-            </section>
-          </aside>
-        </div>
-      </section>
-      <div class="footer">Dibuat untuk seru-seruan bersama 💗 • Main dengan saling menghargai, ya.</div>
-    </div>
-  </main>
-
-  <div class="modal-backdrop" id="questionModal" role="dialog" aria-modal="true" aria-labelledby="cardQuestion">
-    <div class="question-card">
-      <button class="close-x" id="closeCardBtn" aria-label="Tutup kartu">×</button>
-      <div class="card-sparkle" id="cardEmoji">💌</div>
-      <div class="card-type" id="cardType">TRUTH</div>
-      <h2 id="cardQuestion">Pertanyaan muncul di sini</h2>
-      <p id="cardSubtext">Jawab sejujurnya, atau lewati jika kamu tidak nyaman.</p>
-      <button class="btn btn-primary" id="answeredBtn">Sudah dijawab ✨</button>
-      <button class="btn btn-soft" id="skipCardBtn">Lewati pertanyaan</button>
-    </div>
+<section id="lobbyView">
+  <div class="hero">
+    <span class="eyebrow">ROLL • CLIMB • SHARE</span>
+    <h1>Naik tangga, turun ular,<br><span>buka cerita!</span></h1>
+    <p>Main ular tangga bareng teman dan temukan pertanyaan Truth or Dare di sepanjang perjalanan. Tidak ada jawaban benar atau salah—yang penting seru.</p>
   </div>
+  <div class="lobby">
+    <section class="panel">
+      <h2>🌷 Buat room baru</h2>
+      <p>Jadilah host, lalu bagikan kode room ke temanmu.</p>
+      <label for="createName">Nama pemain</label>
+      <input id="createName" maxlength="18" placeholder="Contoh: Amadha" autocomplete="nickname">
+      <button class="btn btn-primary btn-block" id="createBtn">Buat room ✨</button>
+    </section>
+    <section class="panel">
+      <h2>💌 Gabung room</h2>
+      <p>Masukkan kode yang diberikan oleh host.</p>
+      <label for="joinName">Nama pemain</label>
+      <input id="joinName" maxlength="18" placeholder="Nama kamu" autocomplete="nickname">
+      <label for="roomCodeInput">Kode room</label>
+      <input id="roomCodeInput" maxlength="6" placeholder="Contoh: PINK42" style="text-transform:uppercase;letter-spacing:.12em">
+      <button class="btn btn-soft btn-block" id="joinBtn">Gabung permainan</button>
+    </section>
+  </div>
+  <div id="lobbyNotice" class="notice" style="text-align:center"></div>
+  <div class="rules">
+    <span class="rule-chip">👥 2–6 pemain</span>
+    <span class="rule-chip">💗 Truth & Dare acak</span>
+    <span class="rule-chip">🐍 100 kotak</span>
+    <span class="rule-chip">📱 Ramah HP</span>
+  </div>
+</section>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot,
-      runTransaction, serverTimestamp, deleteDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<section id="gameView" class="hidden">
+  <div class="game-layout">
+    <section class="panel board-panel">
+      <div class="game-topline">
+        <div>
+          <div class="room-code">KODE ROOM <strong id="roomCodeDisplay">------</strong></div>
+          <div class="status" id="gameStatus">Menunggu pemain...</div>
+        </div>
+        <button class="btn btn-soft" id="copyCodeBtn">Salin kode</button>
+      </div>
+      <div id="board" class="board" aria-label="Papan ular tangga"></div>
+      <div class="board-legend"><span>🪜 Tangga: naik</span><span>🐍 Ular: turun</span><span>🃏 Setiap berhenti = kartu</span></div>
+    </section>
 
-    // 1) Tempel konfigurasi aplikasi Firebase milikmu di sini.
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    <aside class="game-side">
+      <section class="panel side-panel players-panel">
+        <div class="side-heading"><h2>Teman bermain</h2><span class="count" id="playerCount">0/6</span></div>
+        <div class="player-list" id="playerList"></div>
+        <button class="btn btn-primary btn-block hidden" id="startBtn">Mulai permainan 🎉</button>
+        <button class="btn btn-soft btn-block hidden" id="leaveBtn">Keluar ke beranda</button>
+        <div class="status" id="playerStatus"></div>
+      </section>
+      <section class="panel side-panel">
+        <div class="side-heading"><h2>Giliran kamu</h2><span class="count" id="turnCount">Siap?</span></div>
+        <div class="turn-card">
+          <div class="dice" id="diceFace">🎲</div>
+          <div class="turn-name" id="turnName">Menunggu...</div>
+          <div class="turn-help" id="turnHelp">Host bisa memulai saat teman sudah bergabung.</div>
+          <button class="btn btn-primary" id="rollBtn" disabled>Lempar dadu</button>
+          <button class="btn btn-soft hidden" id="continueBtn">Lanjutkan giliran</button>
+          <div class="status" id="turnStatus"></div>
+        </div>
+      </section>
+      <section class="panel side-panel">
+        <div class="side-heading"><h2>Jejak permainan</h2><span class="count">LIVE</span></div>
+        <div class="log" id="gameLog"><div class="log-item">Belum ada langkah. Siapa yang akan mulai? 🌸</div></div>
+      </section>
+    </aside>
+  </div>
+</section>
+<div class="footer">Dibuat untuk seru-seruan bersama 💗 • Main dengan saling menghargai, ya.</div>
+</div>
+</main>
+
+<div class="modal-backdrop" id="questionModal" role="dialog" aria-modal="true" aria-labelledby="cardQuestion">
+  <div class="question-card">
+    <button class="close-x" id="closeCardBtn" aria-label="Tutup kartu">×</button>
+    <div class="card-sparkle" id="cardEmoji">💌</div>
+    <div class="card-type" id="cardType">TRUTH</div>
+    <h2 id="cardQuestion">Pertanyaan muncul di sini</h2>
+    <p id="cardSubtext">Jawab sejujurnya, atau lewati jika kamu tidak nyaman.</p>
+    <button class="btn btn-primary" id="answeredBtn">Sudah dijawab ✨</button>
+    <button class="btn btn-soft" id="skipCardBtn">Lewati pertanyaan</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, onSnapshot,
+  runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* Konfigurasi Firebase milikmu */
 const firebaseConfig = {
   apiKey: "AIzaSyDs0wA9XNvHtwM35kxFUxbJl_OvEm3T-j4",
   authDomain: "ular-tangga-tod.firebaseapp.com",
@@ -261,394 +259,639 @@ const firebaseConfig = {
   measurementId: "G-BQD3FBWHFS"
 };
 
-    const COLORS = ["#ec8fb8", "#9e8ae6", "#65bda4", "#efa85c", "#7eb8e9", "#e77e7e"];
-    const LADDERS = { 3: 22, 8: 30, 20: 41, 28: 55, 36: 44, 51: 67, 71: 91, 80: 99 };
-    const SNAKES = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 79 };
-    const TRUTH = [
-      "Apa hal kecil yang bisa langsung memperbaiki mood kamu?",
-      "Siapa orang yang paling sering bikin kamu tertawa?",
-      "Apa pengalaman paling memalukan yang sekarang bisa kamu tertawakan?",
-      "Apa kebiasaan unik yang jarang diketahui orang lain?",
-      "Apa pujian yang paling kamu ingat sampai sekarang?",
-      "Kalau bisa mengulang satu hari dalam hidupmu, hari apa dan kenapa?",
-      "Apa hal yang kamu takutkan tetapi ingin kamu coba?",
-      "Apa kesan pertamamu terhadap pemain di sebelahmu?",
-      "Apa hal paling spontan yang pernah kamu lakukan?",
-      "Apa lagu yang diam-diam sering kamu putar?",
-      "Apa sifat yang paling kamu hargai dari seorang teman?",
-      "Apa kebohongan kecil yang pernah kamu ucapkan agar tidak menyakiti perasaan orang?",
-      "Apa pencapaian kecil yang paling kamu banggakan?",
-      "Apa hal yang ingin kamu pelajari tahun ini?",
-      "Siapa yang paling kamu rindukan akhir-akhir ini?",
-      "Apa hal sederhana yang membuatmu merasa disayang?",
-      "Apa keputusan yang awalnya sulit tetapi ternyata baik untukmu?",
-      "Apa momen paling lucu yang pernah kamu alami bersama teman?",
-      "Apa first impression kamu terhadap grup ini?",
-      "Kalau bisa punya satu kemampuan baru, kamu pilih apa?",
-      "Apa hal yang sering orang salah pahami tentang dirimu?",
-      "Apa kebiasaan yang ingin kamu ubah?",
-      "Apa hadiah paling berkesan yang pernah kamu terima?",
-      "Apa hal yang membuatmu merasa percaya diri?",
-      "Apa pengalaman baru yang ingin kamu lakukan bersama teman-teman?",
-      "Apa hal yang paling kamu syukuri minggu ini?",
-      "Siapa orang yang paling mudah kamu ajak curhat?",
-      "Apa hal paling konyol yang pernah kamu lakukan karena gugup?",
-      "Apa definisi pertemanan yang baik menurutmu?",
-      "Kalau hidupmu jadi film, apa judulnya?"
-    ];
-    const DARE = [
-      "Tirukan gaya bicara pembawa berita selama 10 detik.",
-      "Nyanyikan satu baris lagu yang langsung terlintas di pikiranmu.",
-      "Buat ekspresi paling dramatis selama 5 detik.",
-      "Ucapkan tiga hal positif tentang dirimu.",
-      "Ceritakan lelucon receh. Pemain lain wajib mendengarkan sampai selesai!",
-      "Bicara seperti robot sampai giliran berikutnya.",
-      "Peragakan emoji favoritmu tanpa berbicara.",
-      "Sebutkan lima makanan dalam waktu 7 detik.",
-      "Buat slogan iklan untuk benda yang paling dekat denganmu.",
-      "Tirukan suara hewan, biarkan pemain lain menebak.",
-      "Berikan julukan lucu yang sopan untuk dirimu sendiri.",
-      "Lakukan pose kemenangan selama 5 detik.",
-      "Ucapkan alfabet dari Z ke A sejauh yang kamu bisa dalam 10 detik.",
-      "Coba tertawa seperti penjahat kartun selama 5 detik.",
-      "Buat pantun spontan untuk pemain pilihanmu.",
-      "Jelaskan harimu hanya dengan tiga kata.",
-      "Pilih satu pemain dan berikan pujian yang tulus.",
-      "Buat gerakan tarian kecil selama 5 detik.",
-      "Sebutkan tiga hal berwarna pink di sekitarmu.",
-      "Baca kalimat ini dengan suara penyiar: 'Hari ini adalah hari yang luar biasa!'",
-      "Ceritakan cerita mini 15 detik yang harus punya kata 'bakso'.",
-      "Buat pose foto imajiner paling keren.",
-      "Sebutkan tiga benda yang akan kamu bawa ke pulau terpencil.",
-      "Ucapkan 'aku hebat hari ini' dengan gaya paling percaya diri.",
-      "Pura-pura menjadi guru yang sedang menenangkan kelas selama 10 detik.",
-      "Tebak angka 1–10 yang dipikirkan pemain lain dalam tiga kesempatan.",
-      "Buat suara intro untuk acara talk show-mu sendiri.",
-      "Sebutkan tiga hal yang membuat pertemanan jadi seru.",
-      "Beri tepuk tangan untuk semua pemain dengan gaya paling heboh.",
-      "Pilih satu kata, lalu buat kalimat lucu menggunakan kata itu."
-    ];
+const COLORS = ["#ec8fb8","#9e8ae6","#65bda4","#efa85c","#7eb8e9","#e77e7e"];
+const LADDERS = {3:22,8:30,20:41,28:55,36:44,51:67,71:91,80:99};
+const SNAKES = {17:7,54:34,62:19,64:60,87:24,93:73,95:75,98:79};
 
-    const $ = (id) => document.getElementById(id);
-    let auth, db, currentUser = null, currentRoomId = null, roomData = null, unsubscribeRoom = null;
-    let busy = false, previousCardId = null;
-    const configReady = !Object.values(firebaseConfig).some(v => String(v).startsWith("GANTI_"));
+const TRUTH = [
+"Apa hal kecil yang bisa langsung memperbaiki mood kamu?",
+"Siapa orang yang paling sering bikin kamu tertawa?",
+"Apa pengalaman paling memalukan yang sekarang bisa kamu tertawakan?",
+"Apa kebiasaan unik yang jarang diketahui orang lain?",
+"Apa pujian yang paling kamu ingat sampai sekarang?",
+"Kalau bisa mengulang satu hari dalam hidupmu, hari apa dan kenapa?",
+"Apa hal yang kamu takutkan tetapi ingin kamu coba?",
+"Apa kesan pertamamu terhadap pemain di sebelahmu?",
+"Apa hal paling spontan yang pernah kamu lakukan?",
+"Apa lagu yang diam-diam sering kamu putar?",
+"Apa sifat yang paling kamu hargai dari seorang teman?",
+"Apa pencapaian kecil yang paling kamu banggakan?",
+"Apa hal yang ingin kamu pelajari tahun ini?",
+"Apa hal sederhana yang membuatmu merasa disayang?",
+"Apa hal yang sering orang salah pahami tentang dirimu?",
+"Apa hal paling kamu syukuri minggu ini?",
+"Siapa orang yang paling mudah kamu ajak curhat?",
+"Apa definisi pertemanan yang baik menurutmu?",
+"Kalau hidupmu jadi film, apa judulnya?",
+"Kalau bisa punya satu kemampuan baru, kamu pilih apa?",
+"Apa hadiah paling berkesan yang pernah kamu terima?",
+"Apa hal yang membuatmu merasa percaya diri?",
+"Apa keputusan yang ternyata membawa dampak baik?",
+"Apa hal paling lucu yang pernah kamu alami bersama teman?",
+"Apa kebiasaan yang ingin kamu ubah?"
+];
 
-    function notice(message, target = "lobbyNotice") { $(target).textContent = message; }
-    function safeName(value) { return value.trim().replace(/\s+/g, " ").slice(0, 18); }
-    function makeCode() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
-    function escapeText(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
-    function playerByUid(uid) { return roomData?.players?.find(p => p.uid === uid); }
-    function isHost() { return roomData?.hostUid === currentUser?.uid; }
-    function myTurn() { return roomData?.players?.[roomData?.currentTurn]?.uid === currentUser?.uid; }
-    function addLog(message) {
-      const logs = Array.isArray(roomData?.logs) ? [...roomData.logs] : [];
-      logs.unshift({ message, at: Date.now() });
-      return logs.slice(0, 8);
-    }
+const DARE = [
+"Tirukan gaya bicara pembawa berita selama 10 detik.",
+"Nyanyikan satu baris lagu yang terlintas di pikiranmu.",
+"Buat ekspresi paling dramatis selama 5 detik.",
+"Ucapkan tiga hal positif tentang dirimu.",
+"Ceritakan lelucon receh.",
+"Bicara seperti robot sampai giliran berikutnya.",
+"Peragakan emoji favoritmu tanpa berbicara.",
+"Sebutkan lima makanan dalam 7 detik.",
+"Buat slogan iklan untuk benda terdekat.",
+"Tirukan suara hewan.",
+"Lakukan pose kemenangan selama 5 detik.",
+"Buat pantun spontan untuk pemain pilihanmu.",
+"Jelaskan harimu hanya dengan tiga kata.",
+"Pilih satu pemain dan berikan pujian tulus.",
+"Buat gerakan tarian kecil selama 5 detik.",
+"Sebutkan tiga benda berwarna pink di sekitarmu.",
+"Baca kalimat dengan gaya penyiar berita.",
+"Buat pose foto imajiner paling keren.",
+"Ucapkan 'aku hebat hari ini' dengan percaya diri.",
+"Ceritakan cerita mini yang harus memiliki kata 'bakso'.",
+"Berikan tepuk tangan paling heboh untuk semua pemain.",
+"Sebutkan tiga hal yang membuat pertemanan jadi seru.",
+"Buat suara intro untuk acara talk show-mu sendiri.",
+"Pura-pura menjadi guru yang sedang menenangkan kelas.",
+"Sebutkan tiga makanan favoritmu dalam lima detik."
+];
 
-    async function boot() {
-      if (!configReady) {
-        notice("Sebelum bermain online, isi firebaseConfig di index.html dengan konfigurasi project Firebase kamu.");
-        $("createBtn").disabled = true;
-        $("joinBtn").disabled = true;
-        return;
-      }
-      try {
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        await signInAnonymously(auth);
-        onAuthStateChanged(auth, user => { currentUser = user; });
-      } catch (error) {
-        console.error(error);
-        notice("Firebase belum siap. Periksa konfigurasi, Anonymous Authentication, dan Firestore.");
-      }
-    }
+const $ = id => document.getElementById(id);
+let auth, db, currentUser = null, currentRoomId = null;
+let roomData = null, unsubscribeRoom = null, busy = false;
+let previousCardId = null;
 
-    async function ensureUser() {
-      if (currentUser) return currentUser;
-      if (!auth) throw new Error("Firebase belum dikonfigurasi.");
-      return new Promise((resolve, reject) => {
-        const unsub = onAuthStateChanged(auth, user => {
-          if (user) { unsub(); currentUser = user; resolve(user); }
-        }, reject);
-        setTimeout(() => { unsub(); reject(new Error("Gagal menghubungkan akun anonim. Coba muat ulang.")); }, 10000);
-      });
-    }
+const safeName = value => value.trim().replace(/\s+/g," ").slice(0,18);
+const makeCode = () => Math.random().toString(36).slice(2,8).toUpperCase();
+const escapeText = value => String(value).replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
+const isHost = () => roomData?.hostUid === currentUser?.uid;
+const myTurn = () => roomData?.players?.[roomData?.currentTurn]?.uid === currentUser?.uid;
 
-    async function createRoom() {
-      const name = safeName($("createName").value);
-      if (!name) return notice("Isi nama pemain dulu, ya.");
-      try {
-        await ensureUser();
-        let code, ref, exists = true;
-        for (let i = 0; i < 8 && exists; i++) {
-          code = makeCode();
-          ref = doc(db, "rooms", code);
-          exists = (await getDoc(ref)).exists();
-        }
-        if (exists) throw new Error("Belum bisa membuat kode room. Coba lagi.");
-        const player = { uid: currentUser.uid, name, color: COLORS[0], position: 1 };
-        await setDoc(ref, {
-          code, hostUid: currentUser.uid, status: "lobby", playerUids: [currentUser.uid],
-          players: [player], currentTurn: 0, lastRoll: null, pendingCard: null, logs: [],
-          createdAt: serverTimestamp()
-        });
-        enterRoom(code);
-      } catch (error) { console.error(error); notice(error.message || "Room gagal dibuat. Periksa pengaturan Firebase."); }
-    }
-
-    async function joinRoom() {
-      const name = safeName($("joinName").value);
-      const code = $("roomCodeInput").value.trim().toUpperCase();
-      if (!name) return notice("Isi nama pemain dulu, ya.");
-      if (!/^[A-Z0-9]{6}$/.test(code)) return notice("Kode room harus terdiri dari 6 karakter.");
-      try {
-        await ensureUser();
-        const ref = doc(db, "rooms", code);
-        await runTransaction(db, async tx => {
-          const snap = await tx.get(ref);
-          if (!snap.exists()) throw new Error("Room tidak ditemukan. Cek kembali kodenya.");
-          const data = snap.data();
-          if (data.status !== "lobby") throw new Error("Permainan sudah dimulai. Minta host membuat room baru.");
-          if (data.playerUids.includes(currentUser.uid)) return;
-          if (data.players.length >= 6) throw new Error("Room sudah penuh (maksimal 6 pemain).");
-          const player = { uid: currentUser.uid, name, color: COLORS[data.players.length % COLORS.length], position: 1 };
-          tx.update(ref, { players: [...data.players, player], playerUids: [...data.playerUids, currentUser.uid] });
-        });
-        enterRoom(code);
-      } catch (error) { console.error(error); notice(error.message || "Gagal bergabung. Coba periksa kode room."); }
-    }
-
-    function enterRoom(code) {
-      if (unsubscribeRoom) unsubscribeRoom();
-      currentRoomId = code;
-      $("lobbyView").classList.add("hidden");
-      $("gameView").classList.remove("hidden");
-      $("roomCodeDisplay").textContent = code;
-      unsubscribeRoom = onSnapshot(doc(db, "rooms", code), snap => {
-        if (!snap.exists()) {
-          notice("Room ini sudah tidak tersedia.", "gameStatus");
-          return;
-        }
-        roomData = snap.data();
-        renderGame();
-        maybeShowCard();
-      }, error => {
-        console.error(error);
-        notice("Koneksi room terputus. Periksa koneksi internet.", "gameStatus");
-      });
-    }
-
-    /* Ular dan tangga yang membentang di atas papan */
-#board {
-position: relative;
-isolation: isolate;
+function notice(message, target = "lobbyNotice") {
+  $(target).textContent = message;
 }
 
-.snake-overlay {
-position: absolute;
-inset: 0;
-width: 100%;
-height: 100%;
-z-index: 2;
-pointer-events: none;
-overflow: visible;
+function addLog(message, oldLogs = []) {
+  return [{message,at:Date.now()},...oldLogs].slice(0,8);
 }
 
-.snake-overlay path {
-fill: none;
-stroke: #e85d75;
-stroke-width: 5;
-stroke-linecap: round;
-stroke-linejoin: round;
-filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
-}
+/* Membuat papan 100 kotak, ular, dan tangga */
+function buildBoard() {
+  const board = $("board");
+  board.innerHTML = "";
+  const cells = {};
 
-.snake-overlay circle {
-fill: #e85d75;
-stroke: #fff;
-stroke-width: 1.5;
-}
+  for (let rowTop = 0; rowTop < 10; rowTop++) {
+    const rowFromBottom = 9 - rowTop;
 
-.snake-overlay .snake-eye {
-fill: #fff;
-stroke: none;
-}
+    for (let col = 0; col < 10; col++) {
+      const number = rowFromBottom % 2 === 0
+        ? rowFromBottom * 10 + col + 1
+        : rowFromBottom * 10 + 10 - col;
 
-.snake-overlay .snake-pupil {
-fill: #542638;
-stroke: none;
-}
-    function renderBoard() {
-      document.querySelectorAll(".tokens").forEach(el => el.innerHTML = "");
-      (roomData?.players || []).forEach((p, i) => {
-        const cell = document.querySelector(`[data-square="${p.position}"] .tokens`);
-        if (!cell) return;
-        const token = document.createElement("span");
-        token.className = "token";
-        token.style.background = p.color || COLORS[i % COLORS.length];
-        token.title = p.name;
-        token.textContent = p.name.slice(0, 1).toUpperCase();
-        cell.appendChild(token);
-      });
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.dataset.square = number;
+
+      if (LADDERS[number] || SNAKES[number]) cell.classList.add("special");
+
+      const num = document.createElement("span");
+      num.className = "cell-num";
+      num.textContent = number;
+
+      const symbol = document.createElement("span");
+      symbol.className = "cell-symbol";
+      symbol.textContent = LADDERS[number] ? "🪜" :
+        number === 1 ? "🌷" : number === 100 ? "🏆" : "";
+
+      const tokens = document.createElement("div");
+      tokens.className = "tokens";
+
+      cell.append(num,symbol,tokens);
+      board.appendChild(cell);
+      cells[number] = {x:col*100+50,y:rowTop*100+50};
     }
+  }
 
-    function renderGame() {
-      if (!roomData) return;
-      renderBoard();
-      $("playerCount").textContent = `${roomData.players.length}/6`;
-      $("playerList").innerHTML = roomData.players.map((p, i) => {
-        const active = roomData.status === "playing" && i === roomData.currentTurn;
-        return `<div class="player-row ${active ? "active" : ""}">
-          <div class="avatar" style="background:${p.color}">${escapeText(p.name.slice(0,1).toUpperCase())}</div>
-          <div class="player-info"><div class="player-name">${escapeText(p.name)}${p.uid === currentUser?.uid ? " (kamu)" : ""}</div><div class="player-pos">Kotak ${p.position} dari 100</div></div>
-          ${active ? '<span class="turn-tag">GILIRAN</span>' : ""}
-        </div>`;
-      }).join("");
-      $("startBtn").classList.toggle("hidden", !(isHost() && roomData.status === "lobby"));
-      $("leaveBtn").classList.toggle("hidden", false);
-      $("startBtn").disabled = roomData.players.length < 2;
-      $("playerStatus").textContent = roomData.status === "lobby" ? (roomData.players.length < 2 ? "Butuh minimal 2 pemain untuk mulai." : (isHost() ? "Semua siap? Mulai saat temanmu sudah bergabung." : "Menunggu host memulai permainan…")) : "";
-      $("gameStatus").textContent = roomData.status === "lobby" ? "Room terbuka • bagikan kodenya ke teman" : roomData.status === "finished" ? "Permainan selesai 🎉" : "Permainan sedang berlangsung • tersinkron online";
-      const activePlayer = roomData.players[roomData.currentTurn];
-      $("turnName").textContent = roomData.status === "finished" ? "Kita punya pemenang! 🏆" : activePlayer ? (activePlayer.uid === currentUser?.uid ? "Giliran kamu!" : `Giliran ${activePlayer.name}`) : "Menunggu...";
-      $("turnHelp").textContent = roomData.status === "lobby" ? "Host bisa memulai saat minimal 2 pemain bergabung." : roomData.status === "finished" ? "Permainan selesai. Terima kasih sudah bermain!" : myTurn() ? "Lempar dadu dan lihat kartu apa yang kamu dapat." : "Tunggu giliranmu. Papan akan diperbarui otomatis.";
-      $("turnCount").textContent = roomData.status === "lobby" ? "LOBBY" : roomData.status === "finished" ? "SELESAI" : `GILIRAN ${roomData.currentTurn + 1}`;
-      $("diceFace").textContent = roomData.lastRoll || "🎲";
-      const canRoll = roomData.status === "playing" && myTurn() && !roomData.pendingCard && !busy;
-      $("rollBtn").disabled = !canRoll;
-      $("rollBtn").textContent = busy ? "Memproses…" : "Lempar dadu";
-      $("continueBtn").classList.toggle("hidden", !(roomData.pendingCard && roomData.pendingCard.playerUid === currentUser?.uid));
-      $("continueBtn").disabled = busy;
-      const logs = Array.isArray(roomData.logs) ? roomData.logs : [];
-      $("gameLog").innerHTML = logs.length ? logs.map(l => `<div class="log-item">${escapeText(l.message)}</div>`).join("") : '<div class="log-item">Belum ada langkah. Siapa yang akan mulai? 🌸</div>';
-      $("gameLog").scrollTop = 0;
-    }
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns,"svg");
+  svg.setAttribute("class","snake-overlay");
+  svg.setAttribute("viewBox","0 0 1000 1000");
+  svg.setAttribute("preserveAspectRatio","none");
 
-    async function startGame() {
-      if (!isHost() || roomData.players.length < 2) return;
-      try {
-        await runTransaction(db, async tx => {
-          const ref = doc(db, "rooms", currentRoomId);
-          const snap = await tx.get(ref);
-          if (!snap.exists()) throw new Error("Room tidak ditemukan.");
-          const data = snap.data();
-          if (data.hostUid !== currentUser.uid || data.status !== "lobby" || data.players.length < 2) throw new Error("Room belum siap dimulai.");
-          tx.update(ref, { status: "playing", logs: [{ message: "Permainan dimulai! Semoga beruntung 🌸", at: Date.now() }] });
-        });
-      } catch (error) { notice(error.message, "playerStatus"); }
-    }
+  function drawLine(x1,y1,x2,y2,color,width) {
+    const line = document.createElementNS(ns,"path");
+    line.setAttribute("d",`M ${x1} ${y1} L ${x2} ${y2}`);
+    line.style.stroke = color;
+    line.style.strokeWidth = width;
+    svg.appendChild(line);
+  }
 
-    async function rollDice() {
-      if (busy || !roomData || !myTurn() || roomData.status !== "playing" || roomData.pendingCard) return;
-      busy = true; renderGame();
-      try {
-        await runTransaction(db, async tx => {
-          const ref = doc(db, "rooms", currentRoomId);
-          const snap = await tx.get(ref);
-          if (!snap.exists()) throw new Error("Room tidak ditemukan.");
-          const data = snap.data();
-          const idx = data.currentTurn;
-          const player = data.players[idx];
-          if (data.status !== "playing" || !player || player.uid !== currentUser.uid || data.pendingCard) throw new Error("Sekarang bukan giliranmu.");
-          const roll = Math.floor(Math.random() * 6) + 1;
-          const before = player.position;
-          let pos = before + roll;
-          let moveText = `${player.name} melempar ${roll} dan bergerak dari ${before}`;
-          if (pos > 100) pos = before; // harus tepat di kotak 100
-          let special = "";
-          if (LADDERS[pos]) { special = `, naik tangga ke ${LADDERS[pos]}`; pos = LADDERS[pos]; }
-          else if (SNAKES[pos]) { special = `, tergigit ular dan turun ke ${SNAKES[pos]}`; pos = SNAKES[pos]; }
-          moveText += pos === before ? " (belum bisa maju)" : ` ke ${pos}`;
-          moveText += special + ".";
-          const players = data.players.map((p, i) => i === idx ? { ...p, position: pos } : p);
-          const won = pos === 100;
-          const nextTurn = won ? idx : (idx + 1) % players.length;
-          const type = Math.random() < 0.5 ? "TRUTH" : "DARE";
-          const bank = type === "TRUTH" ? TRUTH : DARE;
-          let cardText = bank[Math.floor(Math.random() * bank.length)];
-          const cardId = `${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
-          const pendingCard = { id: cardId, type, text: cardText, playerUid: player.uid, playerName: player.name, square: pos };
-          const logs = [{ message: moveText, at: Date.now() }, ...(data.logs || [])].slice(0, 8);
-          tx.update(ref, {
-            players, currentTurn: nextTurn, lastRoll: roll, pendingCard,
-            status: won ? "finished" : "playing",
-            winnerUid: won ? player.uid : null,
-            logs: won ? [{ message: `🏆 ${player.name} menang! Selamat!`, at: Date.now() }, ...logs].slice(0,8) : logs
-          });
-        });
-      } catch (error) { console.error(error); notice(error.message || "Dadu gagal dilempar. Coba lagi.", "turnStatus"); }
-      finally { busy = false; if (roomData) renderGame(); }
-    }
+  Object.entries(SNAKES).forEach(([head,tail],i) => {
+    const a = cells[Number(head)], b = cells[tail];
+    const bend = i % 2 ? 75 : -75;
+    const path = document.createElementNS(ns,"path");
+    path.setAttribute("d",
+      `M ${a.x} ${a.y} C ${a.x+bend} ${a.y+45}, ${b.x-bend} ${b.y-45}, ${b.x} ${b.y}`
+    );
+    path.style.stroke = ["#e85d75","#9274be","#df7b9d","#d69b4a"][i%4];
+    path.style.strokeWidth = "8";
+    svg.appendChild(path);
 
-    function maybeShowCard() {
-      const card = roomData?.pendingCard;
-      if (!card) {
-        $("questionModal").classList.remove("show");
-        previousCardId = null;
-        return;
-      }
-      if (previousCardId === card.id) return;
-      previousCardId = card.id;
-      $("cardEmoji").textContent = card.type === "TRUTH" ? "💌" : "🎭";
-      $("cardType").textContent = card.type === "TRUTH" ? "💗 TRUTH" : "✨ DARE";
-      $("cardQuestion").textContent = card.text;
-      $("cardSubtext").textContent = `${card.playerName} • Kotak ${card.square}. Jawab jika nyaman; boleh lewati tanpa tekanan.`;
-      $("answeredBtn").textContent = card.playerUid === currentUser?.uid ? "Sudah dijawab ✨" : "Lanjutkan";
-      $("answeredBtn").disabled = false;
-      $("skipCardBtn").textContent = "Lewati pertanyaan";
-      $("questionModal").classList.add("show");
-    }
+    const headCircle = document.createElementNS(ns,"circle");
+    headCircle.setAttribute("cx",a.x);
+    headCircle.setAttribute("cy",a.y);
+    headCircle.setAttribute("r",12);
+    headCircle.style.fill = "#e85d75";
+    headCircle.style.stroke = "#fff";
+    headCircle.style.strokeWidth = "2";
+    svg.appendChild(headCircle);
 
-    async function clearCard(skipped = false) {
-      if (!roomData?.pendingCard || busy) return;
-      busy = true;
-      try {
-        await runTransaction(db, async tx => {
-          const ref = doc(db, "rooms", currentRoomId);
-          const snap = await tx.get(ref);
-          if (!snap.exists()) throw new Error("Room tidak ditemukan.");
-          const data = snap.data();
-          if (!data.pendingCard) return;
-          const card = data.pendingCard;
-          const logs = [{ message: `${card.playerName} ${skipped ? "melewati" : "menjawab"} kartu ${card.type === "TRUTH" ? "Truth" : "Dare"}.`, at: Date.now() }, ...(data.logs || [])].slice(0,8);
-          tx.update(ref, { pendingCard: null, logs });
-        });
-        $("questionModal").classList.remove("show");
-      } catch (error) { console.error(error); notice(error.message || "Kartu belum bisa ditutup.", "turnStatus"); }
-      finally { busy = false; }
-    }
-
-    async function leaveRoom() {
-      if (unsubscribeRoom) unsubscribeRoom();
-      // Returning to the lobby does not delete the room or remove a player, to avoid disrupting a shared game.
-      currentRoomId = null; roomData = null; previousCardId = null;
-      $("questionModal").classList.remove("show");
-      $("gameView").classList.add("hidden");
-      $("lobbyView").classList.remove("hidden");
-      notice("Kamu kembali ke beranda. Room yang sudah dibagikan mungkin masih aktif.");
-    }
-
-    $("createBtn").addEventListener("click", createRoom);
-    $("joinBtn").addEventListener("click", joinRoom);
-    $("startBtn").addEventListener("click", startGame);
-    $("rollBtn").addEventListener("click", rollDice);
-    $("answeredBtn").addEventListener("click", () => clearCard(false));
-    $("skipCardBtn").addEventListener("click", () => clearCard(true));
-    $("closeCardBtn").addEventListener("click", () => clearCard(true));
-    $("continueBtn").addEventListener("click", () => clearCard(false));
-    $("leaveBtn").addEventListener("click", leaveRoom);
-    $("copyCodeBtn").addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(currentRoomId); $("copyCodeBtn").textContent = "Tersalin ✓"; setTimeout(() => $("copyCodeBtn").textContent = "Salin kode", 1600); }
-      catch { notice(`Kode room: ${currentRoomId}`, "gameStatus"); }
+    [-4,4].forEach(offset => {
+      const eye = document.createElementNS(ns,"circle");
+      eye.setAttribute("cx",a.x+offset);
+      eye.setAttribute("cy",a.y-3);
+      eye.setAttribute("r",3);
+      eye.style.fill = "#fff";
+      eye.style.stroke = "none";
+      svg.appendChild(eye);
     });
-    $("roomCodeInput").addEventListener("input", e => e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0,6));
-    $("createName").addEventListener("keydown", e => { if (e.key === "Enter") createRoom(); });
-    $("joinName").addEventListener("keydown", e => { if (e.key === "Enter") joinRoom(); });
-    buildBoard();
-    boot();
-  </script>
+  });
+
+  Object.entries(LADDERS).forEach(([start,end]) => {
+    const a = cells[Number(start)], b = cells[end];
+    const dx = b.x-a.x, dy = b.y-a.y;
+    const length = Math.hypot(dx,dy);
+    const px = (-dy/length)*8, py = (dx/length)*8;
+
+    drawLine(a.x+px,a.y+py,b.x+px,b.y+py,"#8066c9",4);
+    drawLine(a.x-px,a.y-py,b.x-px,b.y-py,"#8066c9",4);
+
+    const steps = Math.max(3,Math.floor(length/30));
+    for (let i=1;i<steps;i++) {
+      const t=i/steps, x=a.x+dx*t, y=a.y+dy*t;
+      drawLine(x+px,y+py,x-px,y-py,"#b39ae9",3);
+    }
+  });
+
+  board.appendChild(svg);
+}
+
+/* Firebase dan login anonim */
+async function boot() {
+  try {
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    await signInAnonymously(auth);
+    currentUser = auth.currentUser;
+    onAuthStateChanged(auth,user => { currentUser = user; });
+  } catch (error) {
+    console.error(error);
+    notice("Firebase belum siap. Aktifkan Anonymous Authentication dan periksa Firestore Rules.");
+  }
+}
+
+async function ensureUser() {
+  if (currentUser) return currentUser;
+  if (!auth) throw new Error("Firebase belum siap. Muat ulang halaman.");
+
+  return new Promise((resolve,reject) => {
+    let done = false;
+    let unsubscribe = () => {};
+
+    const timer = setTimeout(() => {
+      if (done) return;
+      done = true;
+      unsubscribe();
+      reject(new Error("Login gagal. Periksa koneksi dan Firebase Authentication."));
+    },10000);
+
+    unsubscribe = onAuthStateChanged(auth,user => {
+      if (!user || done) return;
+      done = true;
+      clearTimeout(timer);
+      currentUser = user;
+      unsubscribe();
+      resolve(user);
+    },error => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      unsubscribe();
+      reject(error);
+    });
+  });
+}
+
+/* Membuat room baru */
+async function createRoom() {
+  const name = safeName($("createName").value);
+  if (!name) return notice("Isi nama pemain dulu, ya.");
+
+  const button = $("createBtn");
+  button.disabled = true;
+
+  try {
+    await ensureUser();
+
+    let created = false;
+    let code = "";
+
+    for (let attempt=0; attempt<5 && !created; attempt++) {
+      code = makeCode();
+      const ref = doc(db,"rooms",code);
+      const existing = await getDoc(ref);
+      if (existing.exists()) continue;
+
+      const player = {
+        uid:currentUser.uid,
+        name,
+        color:COLORS[0],
+        position:1
+      };
+
+      await setDoc(ref,{
+        code,
+        hostUid:currentUser.uid,
+        status:"lobby",
+        playerUids:[currentUser.uid],
+        players:[player],
+        currentTurn:0,
+        lastRoll:null,
+        pendingCard:null,
+        winnerUid:null,
+        logs:[],
+        createdAt:serverTimestamp()
+      });
+
+      created = true;
+    }
+
+    if (!created) throw new Error("Kode room gagal dibuat. Coba lagi.");
+    enterRoom(code);
+  } catch (error) {
+    console.error(error);
+    notice(error.code==="permission-denied"
+      ? "Izin Firestore ditolak. Periksa Firestore Rules."
+      : error.message || "Room gagal dibuat.");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+/* Bergabung ke room */
+async function joinRoom() {
+  const name = safeName($("joinName").value);
+  const code = $("roomCodeInput").value.trim().toUpperCase();
+
+  if (!name) return notice("Isi nama pemain dulu, ya.");
+  if (!/^[A-Z0-9]{6}$/.test(code)) return notice("Kode room harus terdiri dari 6 karakter.");
+
+  const button = $("joinBtn");
+  button.disabled = true;
+
+  try {
+    await ensureUser();
+    const ref = doc(db,"rooms",code);
+
+    await runTransaction(db,async tx => {
+      const snap = await tx.get(ref);
+      if (!snap.exists()) throw new Error("Room tidak ditemukan. Cek kodenya.");
+
+      const data = snap.data();
+      if (data.status !== "lobby") throw new Error("Permainan sudah dimulai.");
+      if (data.playerUids.includes(currentUser.uid)) return;
+      if (data.players.length >= 6) throw new Error("Room sudah penuh, maksimal 6 pemain.");
+
+      const player = {
+        uid:currentUser.uid,
+        name,
+        color:COLORS[data.players.length%COLORS.length],
+        position:1
+      };
+
+      tx.update(ref,{
+        players:[...data.players,player],
+        playerUids:[...data.playerUids,currentUser.uid]
+      });
+    });
+
+    enterRoom(code);
+  } catch (error) {
+    console.error(error);
+    notice(error.code==="permission-denied"
+      ? "Akses ditolak. Periksa Firestore Rules."
+      : error.message || "Gagal bergabung ke room.");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+/* Sinkronisasi room */
+function enterRoom(code) {
+  if (unsubscribeRoom) unsubscribeRoom();
+
+  currentRoomId = code;
+  $("lobbyView").classList.add("hidden");
+  $("gameView").classList.remove("hidden");
+  $("roomCodeDisplay").textContent = code;
+
+  unsubscribeRoom = onSnapshot(doc(db,"rooms",code),snap => {
+    if (!snap.exists()) {
+      notice("Room tidak tersedia.","gameStatus");
+      return;
+    }
+
+    roomData = snap.data();
+    renderGame();
+    maybeShowCard();
+  },error => {
+    console.error(error);
+    notice("Koneksi room bermasalah. Periksa Firestore Rules.","gameStatus");
+  });
+}
+
+function renderBoard() {
+  document.querySelectorAll(".tokens").forEach(el => el.innerHTML="");
+
+  (roomData?.players || []).forEach((player,index) => {
+    const holder = document.querySelector(`[data-square="${player.position}"] .tokens`);
+    if (!holder) return;
+
+    const token = document.createElement("span");
+    token.className = "token";
+    token.style.background = player.color || COLORS[index%COLORS.length];
+    token.title = player.name;
+    token.textContent = player.name.slice(0,1).toUpperCase();
+    holder.appendChild(token);
+  });
+}
+
+function renderGame() {
+  if (!roomData) return;
+
+  renderBoard();
+  $("playerCount").textContent = `${roomData.players.length}/6`;
+
+  $("playerList").innerHTML = roomData.players.map((p,i) => {
+    const active = roomData.status==="playing" && i===roomData.currentTurn;
+    return `<div class="player-row ${active?"active":""}">
+      <div class="avatar" style="background:${p.color}">${escapeText(p.name.slice(0,1).toUpperCase())}</div>
+      <div class="player-info">
+        <div class="player-name">${escapeText(p.name)}${p.uid===currentUser?.uid?" (kamu)":""}</div>
+        <div class="player-pos">Kotak ${p.position} dari 100</div>
+      </div>
+      ${active?'<span class="turn-tag">GILIRAN</span>':""}
+    </div>`;
+  }).join("");
+
+  $("startBtn").classList.toggle("hidden",!(isHost() && roomData.status==="lobby"));
+  $("leaveBtn").classList.remove("hidden");
+  $("startBtn").disabled = roomData.players.length<2;
+
+  $("playerStatus").textContent = roomData.status==="lobby"
+    ? roomData.players.length<2
+      ? "Butuh minimal 2 pemain untuk mulai."
+      : isHost() ? "Semua siap? Mulai permainan." : "Menunggu host memulai…"
+    : "";
+
+  $("gameStatus").textContent = roomData.status==="lobby"
+    ? "Room terbuka • bagikan kodenya"
+    : roomData.status==="finished"
+      ? "Permainan selesai 🎉"
+      : "Permainan berlangsung • tersinkron online";
+
+  const activePlayer = roomData.players[roomData.currentTurn];
+
+  $("turnName").textContent = roomData.status==="finished"
+    ? "Permainan selesai! 🏆"
+    : activePlayer
+      ? activePlayer.uid===currentUser?.uid ? "Giliran kamu!" : `Giliran ${activePlayer.name}`
+      : "Menunggu...";
+
+  $("turnHelp").textContent = roomData.status==="lobby"
+    ? "Host dapat memulai setelah minimal 2 pemain bergabung."
+    : roomData.status==="finished"
+      ? "Permainan sudah selesai."
+      : myTurn() ? "Lempar dadu dan dapatkan kartu Truth or Dare." : "Tunggu giliranmu.";
+
+  $("turnCount").textContent = roomData.status==="lobby"
+    ? "LOBBY"
+    : roomData.status==="finished" ? "SELESAI" : `GILIRAN ${roomData.currentTurn+1}`;
+
+  $("diceFace").textContent = roomData.lastRoll || "🎲";
+  $("rollBtn").disabled = !(roomData.status==="playing" && myTurn() && !roomData.pendingCard && !busy);
+  $("rollBtn").textContent = busy ? "Memproses…" : "Lempar dadu";
+
+  $("continueBtn").classList.toggle("hidden",!roomData.pendingCard);
+  $("continueBtn").disabled = busy;
+
+  const logs = roomData.logs || [];
+  $("gameLog").innerHTML = logs.length
+    ? logs.map(log=>`<div class="log-item">${escapeText(log.message)}</div>`).join("")
+    : '<div class="log-item">Belum ada langkah. 🌸</div>';
+}
+
+/* Host memulai permainan */
+async function startGame() {
+  if (!isHost() || roomData.players.length<2) return;
+
+  try {
+    await runTransaction(db,async tx => {
+      const ref = doc(db,"rooms",currentRoomId);
+      const snap = await tx.get(ref);
+      if (!snap.exists()) throw new Error("Room tidak ditemukan.");
+
+      const data = snap.data();
+      if (data.hostUid!==currentUser.uid || data.status!=="lobby" || data.players.length<2) {
+        throw new Error("Room belum siap dimulai.");
+      }
+
+      tx.update(ref,{
+        status:"playing",
+        logs:addLog("Permainan dimulai! Semoga beruntung 🌸",data.logs||[])
+      });
+    });
+  } catch(error) {
+    notice(error.message||"Gagal memulai permainan.","playerStatus");
+  }
+}
+
+/* Lempar dadu, gerakkan pion, dan ambil kartu */
+async function rollDice() {
+  if (busy || !roomData || !myTurn() || roomData.status!=="playing" || roomData.pendingCard) return;
+
+  busy = true;
+  renderGame();
+
+  try {
+    await runTransaction(db,async tx => {
+      const ref = doc(db,"rooms",currentRoomId);
+      const snap = await tx.get(ref);
+      if (!snap.exists()) throw new Error("Room tidak ditemukan.");
+
+      const data = snap.data();
+      const idx = data.currentTurn;
+      const player = data.players[idx];
+
+      if (data.status!=="playing" || !player ||
+          player.uid!==currentUser.uid || data.pendingCard) {
+        throw new Error("Sekarang bukan giliranmu.");
+      }
+
+      const roll = Math.floor(Math.random()*6)+1;
+      const before = player.position;
+      let pos = before+roll;
+      let special = "";
+
+      if (pos>100) {
+        pos = before;
+        special = " (perlu angka yang tepat untuk mencapai 100)";
+      } else if (LADDERS[pos]) {
+        special = ` dan naik tangga ke ${LADDERS[pos]}`;
+        pos = LADDERS[pos];
+      } else if (SNAKES[pos]) {
+        special = ` dan turun karena ular ke ${SNAKES[pos]}`;
+        pos = SNAKES[pos];
+      }
+
+      const message = `${player.name} mendapat ${roll}, dari kotak ${before} ke ${pos}${special}.`;
+      const players = data.players.map((p,i)=>i===idx?{...p,position:pos}:p);
+      const won = pos===100;
+      const type = Math.random()<.5 ? "TRUTH" : "DARE";
+      const cards = type==="TRUTH" ? TRUTH : DARE;
+      const text = cards[Math.floor(Math.random()*cards.length)];
+
+      const pendingCard = {
+        id:`${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+        type,
+        text,
+        playerUid:player.uid,
+        playerName:player.name,
+        square:pos
+      };
+
+      let logs = addLog(message,data.logs||[]);
+      if (won) logs = addLog(`🏆 ${player.name} mencapai kotak 100 dan menang!`,logs);
+
+      tx.update(ref,{
+        players,
+        currentTurn:won?idx:(idx+1)%players.length,
+        lastRoll:roll,
+        pendingCard,
+        status:won?"finished":"playing",
+        winnerUid:won?player.uid:null,
+        logs
+      });
+    });
+  } catch(error) {
+    console.error(error);
+    notice(error.message||"Dadu gagal dilempar.","turnStatus");
+  } finally {
+    busy = false;
+    if (roomData) renderGame();
+  }
+}
+
+/* Kartu Truth or Dare */
+function maybeShowCard() {
+  const card = roomData?.pendingCard;
+
+  if (!card) {
+    $("questionModal").classList.remove("show");
+    previousCardId = null;
+    return;
+  }
+
+  if (previousCardId===card.id) return;
+  previousCardId = card.id;
+
+  $("cardEmoji").textContent = card.type==="TRUTH"?"💌":"🎭";
+  $("cardType").textContent = card.type==="TRUTH"?"💗 TRUTH":"✨ DARE";
+  $("cardQuestion").textContent = card.text;
+  $("cardSubtext").textContent = `${card.playerName} • Kotak ${card.square}. Boleh melewati kartu jika tidak nyaman.`;
+  $("answeredBtn").textContent = card.playerUid===currentUser?.uid ? "Sudah dijawab ✨" : "Lanjutkan";
+  $("questionModal").classList.add("show");
+}
+
+async function clearCard(skipped=false) {
+  if (!roomData?.pendingCard || busy) return;
+  busy = true;
+
+  try {
+    await runTransaction(db,async tx => {
+      const ref = doc(db,"rooms",currentRoomId);
+      const snap = await tx.get(ref);
+      if (!snap.exists()) throw new Error("Room tidak ditemukan.");
+
+      const data = snap.data();
+      if (!data.pendingCard) return;
+
+      const card = data.pendingCard;
+      const message = `${card.playerName} ${skipped?"melewati":"menyelesaikan"} kartu ${card.type==="TRUTH"?"Truth":"Dare"}.`;
+
+      tx.update(ref,{
+        pendingCard:null,
+        logs:addLog(message,data.logs||[])
+      });
+    });
+  } catch(error) {
+    console.error(error);
+    notice(error.message||"Kartu belum bisa ditutup.","turnStatus");
+  } finally {
+    busy = false;
+    if (roomData) renderGame();
+  }
+}
+
+/* Kembali ke halaman depan tanpa menghapus room bersama */
+function leaveRoom() {
+  if (unsubscribeRoom) unsubscribeRoom();
+  unsubscribeRoom = null;
+  currentRoomId = null;
+  roomData = null;
+  previousCardId = null;
+
+  $("questionModal").classList.remove("show");
+  $("gameView").classList.add("hidden");
+  $("lobbyView").classList.remove("hidden");
+  notice("Kamu kembali ke beranda. Room yang dibagikan mungkin masih aktif.");
+}
+
+/* Event tombol */
+$("createBtn").addEventListener("click",createRoom);
+$("joinBtn").addEventListener("click",joinRoom);
+$("startBtn").addEventListener("click",startGame);
+$("rollBtn").addEventListener("click",rollDice);
+$("answeredBtn").addEventListener("click",()=>clearCard(false));
+$("skipCardBtn").addEventListener("click",()=>clearCard(true));
+$("closeCardBtn").addEventListener("click",()=>clearCard(true));
+$("continueBtn").addEventListener("click",()=>clearCard(false));
+$("leaveBtn").addEventListener("click",leaveRoom);
+
+$("copyCodeBtn").addEventListener("click",async()=>{
+  try {
+    await navigator.clipboard.writeText(currentRoomId);
+    $("copyCodeBtn").textContent = "Tersalin ✓";
+  } catch {
+    notice(`Kode room: ${currentRoomId}`,"gameStatus");
+  }
+});
+
+$("roomCodeInput").addEventListener("input",event=>{
+  event.target.value = event.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+});
+$("createName").addEventListener("keydown",event=>{if(event.key==="Enter")createRoom();});
+$("joinName").addEventListener("keydown",event=>{if(event.key==="Enter")joinRoom();});
+
+buildBoard();
+boot();
+</script>
 </body>
 </html>
